@@ -1,14 +1,28 @@
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
-import './App.css'
+import Header from "./components/Header";
+import { useState } from "react";
+import Homepage from "./components/Homepage"
+import Profile from "./components/Profile"
+import Favourites from "./components/Favourites"
 
 function App() {
+  const [activeTab, setActiveTab] = useState("Homepage");
+
   return (
-    <>
-      <h1 className='text-xl text-blue-800'></h1>
-    </>
-  )
+    <div>
+      <Header activeTab={activeTab} setActiveTab={setActiveTab}></Header>
+      <main>
+        {activeTab === "Homepage" && (
+          <Homepage></Homepage>
+        )}
+        {activeTab === "Profile" && (
+          <Profile></Profile>
+        )}
+        {activeTab === "Favorites" && (
+          <Favourites></Favourites>
+        )}
+      </main>
+    </div>
+  );
 }
 
-export default App
+export default App;
