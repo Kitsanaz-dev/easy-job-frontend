@@ -6,13 +6,7 @@ import CreatePostPage from "./page/CreatePostPage";
 import PostDatial from "./page/PostDatial";
 import React from 'react'
 
-<<<<<<< Updated upstream
-function App() {
-  
-
-=======
 const App = () => {
->>>>>>> Stashed changes
   return (
      <div className="relative h-full w-full">
       <div className=""/>
