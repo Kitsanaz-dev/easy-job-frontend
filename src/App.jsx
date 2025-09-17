@@ -22,6 +22,7 @@ function App() {
           <Favourites></Favourites>
         )}
       </main>
+      <Footer></Footer>
     </div>
   );
 }
