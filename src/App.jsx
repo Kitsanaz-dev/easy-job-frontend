@@ -3,6 +3,7 @@ import { useState } from "react";
 import Homepage from "./components/Homepage"
 import Profile from "./components/Profile"
 import Favourites from "./components/Favourites"
+import Footer from "./components/Footer";
 
 function App() {
   const [activeTab, setActiveTab] = useState("Homepage");
