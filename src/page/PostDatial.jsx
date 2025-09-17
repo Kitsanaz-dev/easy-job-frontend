@@ -1,9 +1,12 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { getPostById } from '../services/postService';
 import { updatePostDetails } from '../services/postService';
+import { deletePost } from '../services/postService';
 import { useEffect, useState } from 'react';
-import { Heart, MessageCircle, Clock, User, Send, Edit3, Save, X } from 'lucide-react';
+import { Heart, MessageCircle, Clock, User, Send, Edit3, Save, X, Delete, Trash } from 'lucide-react';
+import Swal from 'sweetalert2';
 
 const PostDetail = () => {
     const { id } = useParams();
@@ -14,6 +17,8 @@ const PostDetail = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [editTitle, setEditTitle] = useState('');
     const [editDescription, setEditDescription] = useState('');
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -54,7 +59,7 @@ const PostDetail = () => {
             const response = await updatePostDetails(id, { title: editTitle, description: editDescription });
             console.log("Post updated:", response);
 
-            console.log(post);
+            console.log('post ni :', post);
             // Update local state (you should replace this with actual API call)
             setPost(prev => ({
                 ...prev,
@@ -66,7 +71,23 @@ const PostDetail = () => {
             setIsEditing(false);
             // You can add API call here like: await updatePost(id, { title: editTitle, description: editDescription });
         } catch (error) {
-            console.error("Failed to update post:", error);
+            if (error.response && error.response.status === 404) {
+                console.log('Not your post');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Update Failed',
+                    text: error.response.data?.message || 'You can only edit your own posts.',
+                    timer: 1500
+                });
+            } else {
+                console.error("Failed to update post:", error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Something went wrong while updating the post.',
+                    timer: 1500
+                });
+            }
             // Handle error (you can set an error state if needed)
         }
     };
@@ -75,6 +96,34 @@ const PostDetail = () => {
         setEditTitle(post.title);
         setEditDescription(post.description);
         setIsEditing(false);
+    };
+
+    const handleOnDeleteClick = async () => {
+        try {
+            const response = await deletePost(id);
+            console.log(response);
+            if(response){
+                navigate('/home')
+            }
+        } catch (error) {
+             if (error.response && error.response.status === 404) {
+                console.log('Not your post');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Delete Failed',
+                    text: error.response.data?.message || 'You can only edit your own posts.',
+                    timer: 1500
+                });
+            } else {
+                console.error("Failed to update post:", error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Something went wrong while updating the post.',
+                    timer: 1500
+                });
+            }
+        }
     };
 
     if (loading) {
@@ -122,16 +171,25 @@ const PostDetail = () => {
                                     </div>
                                 </div>
                             </div>
-                            
+
                             {/* Edit Button */}
                             {!isEditing ? (
-                                <button
-                                    onClick={handleEditClick}
-                                    className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg transition-all duration-200 flex items-center space-x-2"
-                                >
-                                    <Edit3 className="w-4 h-4" />
-                                    <span>Edit</span>
-                                </button>
+                                <div className="flex space-x-2">
+                                    <button
+                                        onClick={handleEditClick}
+                                        className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg transition-all duration-200 flex items-center space-x-2"
+                                    >
+                                        <Edit3 className="w-4 h-4" />
+                                        <span>Edit</span>
+                                    </button>
+                                    <button 
+                                        className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-all duration-200 flex items-center space-x-2"
+                                        onClick={handleOnDeleteClick}
+                                    >
+                                        <Trash className="w-4 h-4" />
+                                        <span>delete</span>
+                                    </button>
+                                </div>
                             ) : (
                                 <div className="flex space-x-2">
                                     <button

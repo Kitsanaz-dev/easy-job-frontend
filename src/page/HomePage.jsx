@@ -1,12 +1,14 @@
 
 // HomePage.jsx
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { getAllPosts } from '../services/postService';
 import { getUserInfo } from '../services/auth';
 import PostCard from '../components/postCard';
 
 const HomePage = () => {
   const [posts, setPosts] = useState([]);
+  // User information
+  const[userName,setUserName]=useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -14,11 +16,15 @@ const HomePage = () => {
     const fetchPosts = async () => {
       try {
         setLoading(true);
+        // Fetch posts and user info concurrently
         const data = await getAllPosts();
         const user = await getUserInfo();
+        // Log the fetched data
         console.log("Fetched posts:", data);
         console.log("User info:", user);
+        // Update state with fetched data
         setPosts(data);
+        setUserName(user.name);
         setError(null);
       } catch (error) {
         console.error("Failed to fetch posts:", error);
@@ -106,6 +112,7 @@ const HomePage = () => {
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">Latest Posts</h1>
+                <h1>{`Welcome, ${userName}`}</h1>
                 <p className="mt-2 text-gray-600">
                   Discover amazing content from our community • {posts.length} {posts.length === 1 ? 'post' : 'posts'}
                 </p>
