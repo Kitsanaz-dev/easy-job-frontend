@@ -14,10 +14,13 @@ const HomePage = () => {
     const fetchPosts = async () => {
       try {
         setLoading(true);
+        // Fetch posts and user info concurrently
         const data = await getAllPosts();
         const user = await getUserInfo();
+        // Log the fetched data
         console.log("Fetched posts:", data);
         console.log("User info:", user);
+        // Update state with fetched data
         setPosts(data);
         setError(null);
       } catch (error) {

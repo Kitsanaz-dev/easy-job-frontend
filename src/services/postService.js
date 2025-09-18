@@ -40,3 +40,13 @@ export const updatePostDetails = async (postId, postData) => {
         throw error;
     }
 }
+//delete a post
+export const deletePost = async (postId) => {
+    try {
+        const res = await api.delete(`/posts/${postId}`);
+        return res.data;
+    } catch (error) {
+        console.error("Error updating post:", error);
+        throw error;
+    }
+}
