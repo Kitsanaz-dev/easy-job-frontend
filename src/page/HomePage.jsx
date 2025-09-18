@@ -7,8 +7,6 @@ import Aboutus from "../components/Aboutus";
 
 const HomePage = () => {
   const [posts, setPosts] = useState([]);
-  // User information
-  const [userName, setUserName]=useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -24,7 +22,6 @@ const HomePage = () => {
         console.log("User info:", user);
         // Update state with fetched data
         setPosts(data);
-        setUserName(user.name);
         setError(null);
       } catch (error) {
         console.error("Failed to fetch posts:", error);
