@@ -251,7 +251,10 @@ const PostDetail = () => {
   return (
     <div>
       <div className="absolute top-6 left-6 cursor-pointer">
-        <FaArrowLeft className="w-8 h-8 text-blue-600" onClick={backToHome} />
+        <FaArrowLeft
+          className="w-8 h-8 text-blue-600 hover:text-blue-800 hover:scale-110 duration-200 ease-in-out"
+          onClick={backToHome}
+        />
       </div>
       <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
         <div className="max-w-4xl mx-auto px-4 py-8">

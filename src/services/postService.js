@@ -12,7 +12,7 @@ export const getAllPosts = async () => {
 //get single post by id
 export const getPostById = async (postId) => {
     try {
-        const res = await api.get(`/posts/${postId}`);
+        const res = await api.get(`/posts/get/${postId}`);
         return res.data;
     } catch (error) {
         console.error("Error fetching post by ID:", error);
@@ -81,3 +81,14 @@ export const unLikePost = async (postId) => {
         throw error;
     }
 }
+//get my post
+export const getMyPosts = async () => {
+    try {
+        const res = await api.get("/posts/me");
+        return res.data;
+    } catch (error) {
+        console.error("Error fetching my posts:", error);
+        throw error;
+    }
+  };
+  
