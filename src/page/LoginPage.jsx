@@ -24,7 +24,17 @@ const LoginPage = () => {
       if (user && user.token) {
         setEmail("");
         setPassword("");
-        navigate("/home");
+
+        Swal.fire({
+            icon: "success",
+            title: "Login Successful 🎉",
+            text: `Welcome back, ${user.name || "User"}!`,
+            timer: 2000,
+            showConfirmButton: false,
+          });
+  
+        setTimeout(() => navigate("/home"), 1000);
+
       } else {
         Swal.fire({
           icon: "error",
@@ -261,7 +271,7 @@ const LoginPage = () => {
         </div>
 
         {/* Footer */}
-        <div className="text-center text-xs text-gray-500">
+        {/* <div className="text-center text-xs text-gray-500">
           Protected by reCAPTCHA and subject to the{" "}
           <a
             href="#"
@@ -276,7 +286,7 @@ const LoginPage = () => {
           >
             Terms of Service
           </a>
-        </div>
+        </div> */}
       </div>
     </div>
   );
