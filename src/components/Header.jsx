@@ -31,7 +31,7 @@ export default function Header() {
     <div className="z-[11] fixed top-0 w-full">
       <header className="flex justify-between items-center bg-[#f8f8f8] py-2 px-5 h-20">
         {/* Left - Profile (icon + username) */}
-        <div className="flex items-center gap-4 px-4 py-2 rounded-lg">
+        <div className="flex flex-1 items-center gap-4 px-4 py-2 rounded-lg">
           <FaUser className="text-2xl text-gray-700" />
           <span className="font-semibold text-gray-800">
             {userName || "Guest"}
@@ -39,7 +39,7 @@ export default function Header() {
         </div>
 
         {/* Center - Nav Icons */}
-        <nav className="flex gap-10 items-center">
+        <nav className="flex flex-1 gap-10 items-center justify-center">
           <NavLink
             to="/home"
             className={({ isActive }) => `${base} ${isActive ? active : ""}`}
@@ -64,9 +64,11 @@ export default function Header() {
         </nav>
 
         {/* Right - Logout */}
-        <button onClick={logout} aria-label="Logout">
-          <FaSignOutAlt className="text-red-500 text-3xl transition-transform duration-200 hover:scale-125" />
-        </button>
+        <div className="flex flex-1 justify-end">
+          <button onClick={logout} aria-label="Logout">
+            <FaSignOutAlt className="text-red-500 text-3xl transition-transform duration-200 hover:scale-125" />
+          </button>
+        </div>
       </header>
     </div>
   );
