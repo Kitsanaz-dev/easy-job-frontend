@@ -5,8 +5,8 @@ import HomePage from "./page/HomePage";
 import CreatePostPage from "./page/CreatePostPage";
 import PostDatial from "./page/PostDatial";
 import Header from "./components/Header";
-import ProfilePage from "./components/ProfilePage";
-import FavoritePage from "./components/FavoritePage";
+import ProfilePage from "./page/ProfilePage";
+import FavoritePage from "./page/FavoritePage";
 import Footer from "./components/Footer";
 
 export default function App() {

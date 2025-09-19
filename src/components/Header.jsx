@@ -28,7 +28,7 @@ export default function Header() {
   }, []);
 
   return (
-    <div className="z-[4] fixed top-0 w-full">
+    <div className="z-[11] fixed top-0 w-full">
       <header className="flex justify-between items-center bg-[#f8f8f8] py-2 px-5 h-20">
         {/* Left - Profile (icon + username) */}
         <div className="flex items-center gap-4 px-4 py-2 rounded-lg">

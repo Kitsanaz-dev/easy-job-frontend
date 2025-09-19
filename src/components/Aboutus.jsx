@@ -7,17 +7,17 @@ const team = [
     img: Chi,
   },
   {
-    name: "Phonesavanh Sounakhen",
+    name: "Oudomdeth Vongxay",
     role: "Backend Developer",
     img: Chi,
   },
   {
-    name: "Chanthone Phimmasone",
+    name: "Thavisack Souliyalath",
     role: "UI/UX Designer",
     img: Chi,
   },
   {
-    name: "Souphaphone Vongxay",
+    name: "Kitsana Chanthabandith",
     role: "Project Manager",
     img: Chi,
   },
