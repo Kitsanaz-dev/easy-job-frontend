@@ -1,4 +1,7 @@
 import Chi from "../assets/chi.jpg";
+import Oh from "../assets/oh.jpg";
+import Bob from "../assets/bob.jpg";
+import Mon from "../assets/mon.jpg";
 
 const team = [
   {
@@ -9,17 +12,17 @@ const team = [
   {
     name: "Oudomdeth Vongxay",
     role: "Backend Developer",
-    img: Chi,
+    img: Oh,
   },
   {
     name: "Thavisack Souliyalath",
     role: "UI/UX Designer",
-    img: Chi,
+    img: Mon,
   },
   {
     name: "Kitsana Chanthabandith",
     role: "Project Manager",
-    img: Chi,
+    img: Bob,
   },
 ];
 
