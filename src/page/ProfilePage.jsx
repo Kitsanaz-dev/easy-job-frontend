@@ -1,42 +1,87 @@
+// page/ProfilePage.jsx
 import { Link } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { getUserInfo } from "../services/auth";
+import { getMyPosts } from "../services/postService";
+import PostCard from "../components/PostCard";
+import { getFavorites, addFavorite, removeFavorite } from "../services/favoriteService";
 
 export default function ProfilePage() {
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
+  const [myPosts, setMyPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Placeholder “my posts”
-  const myPosts = []; // fetch from API later
-
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchData = async () => {
       try {
-        const u = await getUserInfo();
+        setLoading(true);
+
+        // fetch user + (my posts & favorites) concurrently
+        const [u, posts, favs] = await Promise.all([
+          getUserInfo().catch(() => null),
+          getMyPosts(),
+          getFavorites().catch(() => []), // fallback if not logged in
+        ]);
+
         if (u) {
           setUserName(u.name || u.username || "Guest");
           setUserEmail(u.email || "");
         }
+
+        // build fav id set
+        const favoriteArray = Array.isArray(favs) ? favs : favs?.posts || [];
+        const favIds = new Set((favoriteArray || []).map(p => String(p._id || p.id)));
+
+        // normalize ids & flag my posts as favorite
+        const merged = (posts || []).map(p => {
+          const _id = p._id || p.id;
+          return { ...p, _id, isFavorite: favIds.has(String(_id)) };
+        });
+
+        setMyPosts(merged);
+        setError(null);
       } catch (err) {
-        setError("Failed to load user information");
-        console.error(err);
+        console.error("Failed to load profile or posts:", err);
+        setError("Failed to load user information or posts");
       } finally {
         setLoading(false);
       }
     };
-    fetchUser();
+
+    fetchData();
   }, []);
 
+  const handleToggleFavorite = async (postId, nextState) => {
+    if (!postId) return;
+    try {
+      if (nextState) {
+        await addFavorite(postId);
+      } else {
+        await removeFavorite(postId);
+      }
+      // update local state
+      setMyPosts(prev =>
+        prev.map(p =>
+          String(p._id || p.id) === String(postId) ? { ...p, isFavorite: nextState } : p
+        )
+      );
+    } catch (e) {
+      console.error("Favorite toggle failed:", e);
+      // optional: toast error
+    }
+  };
+
+  // ... keep your loading/error UIs
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        {/* Loading State */}
+        {/* skeletons (kept from your version) */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(6)].map((_, i) => (
+            {Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}
                 className="bg-white rounded-xl shadow-lg overflow-hidden animate-pulse"
@@ -102,42 +147,50 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-4 py-8">
       <section className="flex items-center gap-4 mb-8">
         <FaUser className="text-2xl text-gray-700" />
         <div>
           <h1 className="text-2xl font-bold">@{userName}</h1>
           <p className="text-gray-600">{userEmail}</p>
         </div>
+        <div className="ml-auto">
+          <Link
+            to="/create-post"
+            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+          >
+            + New Post
+          </Link>
+        </div>
       </section>
 
       <h2 className="text-xl font-semibold mb-4">My Posts</h2>
       {myPosts.length === 0 ? (
-        <p className="text-gray-600">
-          You haven’t posted yet.{" "}
-          <Link to="/create-post" className="text-blue-600 underline">
-            Create one
-          </Link>
-          .
-        </p>
-      ) : (
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {myPosts.map((p) => (
-            <li key={p._id} className="border rounded-lg p-4 hover:shadow">
-              <h3 className="font-semibold">{p.title}</h3>
-              <p className="text-sm text-gray-600 line-clamp-2">
-                {p.description}
-              </p>
-              <Link
-                to={`/post/${p._id}`}
-                className="text-blue-600 text-sm mt-2 inline-block"
-              >
-                View
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
+          <div className="text-center py-12">
+            <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                  d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2.5 2.5 0 00-2.5-2.5H15"/>
+              </svg>
+            </div>
+            <h3 className="text-xl font-medium text-gray-900 mb-2">No posts yet</h3>
+            <p className="text-gray-500 mb-6">Be the first to share something amazing with the community!</p>
+            <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200">
+              Create First Post
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {myPosts.map((post) => (
+              <PostCard
+                key={post._id || post.id}
+                post={post}
+                isFavorite={!!post.isFavorite}
+                onToggleFavorite={handleToggleFavorite}
+              />
+            ))}
+          </div>
+        )}
     </div>
   );
 }
