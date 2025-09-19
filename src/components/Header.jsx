@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { FaHome, FaUser, FaHeart, FaSignOutAlt } from "react-icons/fa";
 import { getUserInfo, logOut } from "../services/auth";
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 const base =
   "text-3xl cursor-pointer transition-transform duration-200 ease-in-out hover:scale-125";
@@ -12,8 +13,27 @@ export default function Header() {
   const [userName, setUserName] = useState("");
   const navigate = useNavigate();
 
-  const logout = () => {
-    logOut(navigate);
+  const handleLogout = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You will be logged out of your account.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, log me out",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        logOut(navigate); // your logout function
+        Swal.fire({
+          title: "Logged out!",
+          text: "You have been logged out successfully.",
+          icon: "success",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      }
+    });
   };
 
   useEffect(() => {
@@ -64,7 +84,7 @@ export default function Header() {
 
         {/* Right - Logout */}
         <div className="flex flex-1 justify-end">
-          <button onClick={logout} aria-label="Logout">
+          <button onClick={handleLogout} aria-label="Logout">
             <FaSignOutAlt className="text-red-500 text-3xl transition-transform duration-200 hover:scale-125" />
           </button>
         </div>
