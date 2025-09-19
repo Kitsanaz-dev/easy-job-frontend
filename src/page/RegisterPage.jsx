@@ -73,7 +73,7 @@ const RegisterPage = () => {
                                     placeholder="Enter your full name"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
-                                    className="appearance-none relative block w-full pl-10 pr-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:z-10 transition-all duration-200 hover:border-gray-400"
+                                    className="appearance-none relative block w-full pl-6 pr-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:z-10 transition-all duration-200 hover:border-gray-400"
                                 />
                             </div>
                         </div>
@@ -96,7 +96,7 @@ const RegisterPage = () => {
                                     placeholder="Enter your email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="appearance-none relative block w-full pl-10 pr-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:z-10 transition-all duration-200 hover:border-gray-400"
+                                    className="appearance-none relative block w-full pl-6 pr-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:z-10 transition-all duration-200 hover:border-gray-400"
                                 />
                             </div>
                         </div>
@@ -119,7 +119,7 @@ const RegisterPage = () => {
                                     placeholder="Create a secure password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="appearance-none relative block w-full pl-10 pr-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:z-10 transition-all duration-200 hover:border-gray-400"
+                                    className="appearance-none relative block w-full pl-6 pr-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:z-10 transition-all duration-200 hover:border-gray-400"
                                 />
                             </div>
                         </div>
