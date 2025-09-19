@@ -1,7 +1,7 @@
 // components/Header.jsx
 import { NavLink, useNavigate } from "react-router-dom";
 import { FaHome, FaUser, FaHeart, FaSignOutAlt } from "react-icons/fa";
-import { getUserInfo } from "../services/auth";
+import { getUserInfo, logOut } from "../services/auth";
 import { useEffect, useState } from "react";
 
 const base =
@@ -13,8 +13,7 @@ export default function Header() {
   const navigate = useNavigate();
 
   const logout = () => {
-    // TODO: clear tokens/localStorage etc.
-    navigate("/"); // back to login
+    logOut(navigate);
   };
 
   useEffect(() => {
