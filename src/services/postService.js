@@ -50,3 +50,34 @@ export const deletePost = async (postId) => {
         throw error;
     }
 }
+
+//comment a post
+export const commentPost = async (postId,data) => {
+    try {
+        const res = await api.post(`/posts/${postId}/comment`,data)
+        return res.data
+    } catch (error) {
+        console.error("Error comment post:",error)
+        throw error;
+    }
+}
+//like a post 
+export const likePost = async (postId) => {
+    try {
+        const res = await api.put(`posts/${postId}/like`)
+        return res.data
+    } catch (error) {
+        console.error("Error comment post:",error)
+        throw error;
+    }
+}
+//unlike a post
+export const unLikePost = async (postId) => {
+    try {
+        const res = await api.put(`posts/${postId}/unlike`)
+        return res.data
+    } catch (error) {
+        console.error("Error comment post:",error)
+        throw error;
+    }
+}

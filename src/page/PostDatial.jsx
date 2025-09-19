@@ -4,8 +4,11 @@ import { useParams } from 'react-router-dom';
 import { getPostById } from '../services/postService';
 import { updatePostDetails } from '../services/postService';
 import { deletePost } from '../services/postService';
+import { commentPost } from '../services/postService';
+import { likePost } from '../services/postService';
+import { unLikePost } from '../services/postService';
 import { useEffect, useState } from 'react';
-import { Heart, MessageCircle, Clock, User, Send, Edit3, Save, X, Delete, Trash } from 'lucide-react';
+import { Heart, MessageCircle, Clock, User, Send, Edit3, Save, X, Trash, HeartCrack } from 'lucide-react';
 import Swal from 'sweetalert2';
 
 const PostDetail = () => {
@@ -17,6 +20,7 @@ const PostDetail = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [editTitle, setEditTitle] = useState('');
     const [editDescription, setEditDescription] = useState('');
+    const [onlikeCheck, setOnlikeCheck] = useState(false);
 
     const navigate = useNavigate();
 
@@ -40,14 +44,41 @@ const PostDetail = () => {
         fetchPost();
     }, [id]);
 
-    const handleAddComment = () => {
+    const handleAddComment = async () => {
         if (newComment.trim()) {
-            // Here you would typically make an API call to add the comment
-            console.log("Adding comment:", newComment);
-            setNewComment('');
-            // You can add API call here to post the comment
+            try {
+                const response = await commentPost(id, { comment: newComment });
+
+                if (response) {
+                    setPost(prev => ({
+                        ...prev,
+                        comment: [...(prev.comment || []), newComment],
+                        updatedAt: new Date().toISOString()
+                    }));
+                }
+
+                setNewComment(''); // clear input
+            } catch (error) {
+                if (error.response && error.response.status === 404) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Comment Failed',
+                        text: error.response.data?.message || 'Post not found.',
+                        timer: 1500
+                    });
+                } else {
+                    console.error("Failed to update post:", error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Something went wrong while updating the post.',
+                        timer: 1500
+                    });
+                }
+            }
         }
     };
+
 
     const handleEditClick = () => {
         setIsEditing(true);
@@ -102,11 +133,11 @@ const PostDetail = () => {
         try {
             const response = await deletePost(id);
             console.log(response);
-            if(response){
+            if (response) {
                 navigate('/home')
             }
         } catch (error) {
-             if (error.response && error.response.status === 404) {
+            if (error.response && error.response.status === 404) {
                 console.log('Not your post');
                 Swal.fire({
                     icon: 'error',
@@ -125,6 +156,51 @@ const PostDetail = () => {
             }
         }
     };
+
+    const handleOnLikeClick = async () => {
+        try {
+            //call like method
+            if (onlikeCheck === false) {
+                const response = await likePost(id)
+                if (response) {
+                    setOnlikeCheck(true)
+                    setPost(prev => ({
+                        ...prev,
+                        likeCount: (prev.likeCount || 0) + 1,
+                        updatedAt: new Date().toISOString()
+                    }));
+                }
+            } else {
+                const response = await unLikePost(id);
+                if (response) {
+                    setOnlikeCheck(false);
+                    setPost(prev => ({
+                        ...prev,
+                        likeCount: (prev.likeCount || 0) - 1,
+                        updatedAt: new Date().toISOString()
+                    }));
+                }
+            }
+        } catch (error) {
+            if (error.response && error.response.status === 404) {
+                console.log('Not your post');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Like Failed',
+                    text: error.response.data?.message || 'You can only edit your own posts.',
+                    timer: 1500
+                });
+            } else {
+                console.error("Failed to update post:", error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Something went wrong while updating the post.',
+                    timer: 1500
+                });
+            }
+        }
+    }
 
     if (loading) {
         return (
@@ -182,7 +258,7 @@ const PostDetail = () => {
                                         <Edit3 className="w-4 h-4" />
                                         <span>Edit</span>
                                     </button>
-                                    <button 
+                                    <button
                                         className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-all duration-200 flex items-center space-x-2"
                                         onClick={handleOnDeleteClick}
                                     >
@@ -249,9 +325,14 @@ const PostDetail = () => {
 
                         {/* Actions */}
                         <div className="flex items-center space-x-6 border-t pt-6">
-                            <div className="flex items-center space-x-2 px-4 py-2 rounded-full bg-red-100 text-red-600">
-                                <Heart className="w-5 h-5" />
-                                <span className="font-semibold">{post.likeCount || 0}</span>
+                            <div className="flex items-center space-x-2 px-4 py-2 rounded-full">
+                                <button
+                                    className="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg transition-all duration-200 flex items-center space-x-2"
+                                    onClick={handleOnLikeClick}
+                                >
+                                    <Heart className="w-5 h-5" />
+                                    <span className="font-semibold">{post.likeCount}</span>
+                                </button>
                             </div>
                             <div className="flex items-center space-x-2 text-gray-600">
                                 <MessageCircle className="w-5 h-5" />
