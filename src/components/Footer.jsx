@@ -15,7 +15,7 @@ export default function Footer() {
 
           {/* Links */}
           <nav className="flex justify-center space-x-8 font-medium">
-            <a href="/" className="hover:text-blue-400 transition-colors duration-300">
+            <a href="/home" className="hover:text-blue-400 transition-colors duration-300">
               Home
             </a>
             <a href="/about" className="hover:text-blue-400 transition-colors duration-300">
